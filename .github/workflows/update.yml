@@ -93,6 +93,7 @@ jobs:
 
       - name: Enable Auto-Merge
         if: steps.check.outputs.update_needed == 'true' && steps.create-pr.outputs.pull-request-number
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh pr merge ${{ steps.create-pr.outputs.pull-request-number }} --auto --squash --delete-branch
@@ -107,7 +108,7 @@ jobs:
             echo "- Current Version: ${{ steps.check.outputs.current_version }}" >> "$GITHUB_STEP_SUMMARY"
             echo "- Latest Version: ${{ steps.check.outputs.new_version }}" >> "$GITHUB_STEP_SUMMARY"
             echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "Pull request created and auto-merge enabled." >> "$GITHUB_STEP_SUMMARY"
+            echo "Pull request created. Auto-merge was attempted when supported." >> "$GITHUB_STEP_SUMMARY"
           else
             CURRENT_VERSION=$(sed -n 's/.*version = "\([^"]*\)".*/\1/p' package.nix | head -1)
             echo "- Current Version: $CURRENT_VERSION" >> "$GITHUB_STEP_SUMMARY"
