@@ -1,13 +1,14 @@
 { lib
 , rustPlatform
 , fetchFromGitHub
+, git
 , zig_0_15
 ,
 }:
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "herdr";
-  version = "0.6.0";
+  version = "0.6.1";
 
   __structuredAttrs = true;
 
@@ -15,10 +16,10 @@ rustPlatform.buildRustPackage (finalAttrs: {
     owner = "ogulcancelik";
     repo = "herdr";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-N0PRpWMpP2AqndgiN/Cw2/rTVhsrAFOIUZAH1BBvuwk=";
+    hash = "sha256-HPl3bePYUXRqfVXv2KcZqJ+WC9b6vlwt8tPIhlt+Ihw=";
   };
 
-  cargoHash = "sha256-k+MFTivVMO/jOi8OGYm0cHzmFiMLXyC4GlmEYAQD7To=";
+  cargoHash = "sha256-vcpaiLGv/HphpfXy5yNn3RZAQoY+FzW++eVeF6CE/Cg=";
 
   zigDeps = zig_0_15.fetchDeps {
     inherit (finalAttrs) pname version;
@@ -28,6 +29,8 @@ rustPlatform.buildRustPackage (finalAttrs: {
   };
 
   nativeBuildInputs = [ zig_0_15.hook ];
+
+  nativeCheckInputs = [ git ];
 
   cargoTestFlags = [ "--bin=herdr" ];
 
