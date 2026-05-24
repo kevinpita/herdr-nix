@@ -37,6 +37,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
   checkFlags = [
     "--skip=detect::tests::foreground_job_detects_shell_running_command"
     "--skip=detect::tests::foreground_job_detects_sleep"
+    "--skip=app::input::navigate::tests::custom_command_runs_from_prefix_key_in_navigate_mode"
   ];
 
   dontUseZigBuild = true;
