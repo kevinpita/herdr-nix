@@ -1,6 +1,11 @@
 {
   description = "Nix flake for herdr, an agent multiplexer that lives in your terminal";
 
+  nixConfig = {
+    extra-substituters = [ "https://kevinpita.cachix.org" ];
+    extra-trusted-public-keys = [ "kevinpita.cachix.org-1:Cu9UtCDSfDq3/WDnI7N1N/LzAh90SPS+1R+nWao/hz0=" ];
+  };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";

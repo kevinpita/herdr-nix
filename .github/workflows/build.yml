@@ -25,6 +25,11 @@ jobs:
         env:
           NIX_FIRST_BUILD_UID: 400
 
+      - uses: cachix/cachix-action@v17
+        with:
+          name: kevinpita
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
       - name: Build herdr
         run: nix build .#herdr --print-build-logs
 

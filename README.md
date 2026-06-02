@@ -14,6 +14,14 @@ nix run github:kevinpita/herdr-nix
 nix profile install github:kevinpita/herdr-nix
 ```
 
+## Binary Cache
+
+Prebuilt `x86_64-linux` outputs are served from a [Cachix](https://www.cachix.org/) cache, so installing pulls the binary instead of compiling herdr locally. The flake advertises the cache via `nixConfig`; the first `nix run`/`nix profile install` will ask to trust it. To opt in permanently:
+
+```bash
+cachix use kevinpita
+```
+
 ## Use In A Flake
 
 ```nix
