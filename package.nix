@@ -2,6 +2,8 @@
 , rustPlatform
 , fetchFromGitHub
 , zig_0_15
+, git
+, coreutils
 ,
 }:
 
@@ -29,11 +31,45 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   nativeBuildInputs = [ zig_0_15.hook ];
 
-  # Upstream's nix/package.nix sets doCheck = false because the Rust test
-  # suite is covered by herdr's own CI and several tests are flaky inside
-  # the Nix sandbox (env-dependent shell behavior, parallel test races on
-  # temp dirs). Match that intent here.
-  doCheck = false;
+  # The worktree/git unit tests shell out to `git`, which is otherwise not on
+  # PATH inside the Nix build sandbox.
+  nativeCheckInputs = [ git ];
+
+  # Several tests exec a throwaway helper via its FHS path (/usr/bin/true,
+  # /bin/cat), which does not exist on NixOS. Point them at coreutils so the
+  # tests run instead of being skipped; this also avoids poisoning the shared
+  # test mutex, which would otherwise cascade into ~18 unrelated failures.
+  postPatch = ''
+    substituteInPlace \
+      src/app/api/worktrees.rs \
+      src/app/mod.rs \
+      src/app/input/terminal.rs \
+      src/app/input/mouse.rs \
+      src/persist/restore.rs \
+      --replace-fail '/usr/bin/true' '${lib.getExe' coreutils "true"}'
+    substituteInPlace \
+      src/pane.rs \
+      src/pty/backend.rs \
+      --replace-fail '/bin/cat' '${lib.getExe' coreutils "cat"}'
+  '';
+
+  # Run the binary's unit tests only. The integration suite under tests/ spawns
+  # herdr server processes, binds unix sockets and shells out to lsof/pgrep,
+  # none of which work in the sandbox.
+  cargoTestFlags = [ "--bin=herdr" ];
+
+  # Remaining sandbox-only failures, not real defects:
+  #   - the foreground-job tests spawn a process inside a PTY and inspect its
+  #     foreground process group, which needs a controlling terminal the
+  #     sandbox does not provide;
+  #   - the restore test asserts that `ps` reports the pane child's command
+  #     ending in "cat", but on NixOS `cat` lives at a long store path that the
+  #     kernel's 15-char comm field truncates, dropping the "cat" suffix.
+  checkFlags = [
+    "--skip=detect::tests::foreground_job_detects_sleep"
+    "--skip=detect::tests::foreground_job_detects_shell_running_command"
+    "--skip=pane::tests::spawn_agent_restore_uses_restore_command_as_pane_child"
+  ];
 
   dontUseZigBuild = true;
   dontUseZigCheck = true;
