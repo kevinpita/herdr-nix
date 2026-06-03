@@ -9,7 +9,7 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "herdr";
-  version = "0.6.6";
+  version = "0.6.7";
 
   __structuredAttrs = true;
 
@@ -17,16 +17,16 @@ rustPlatform.buildRustPackage (finalAttrs: {
     owner = "ogulcancelik";
     repo = "herdr";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-zim9JSVCfbSrH5XovifGFST9J1kYkjou7E5oeBXfF34=";
+    hash = "sha256-Gsa/5C3w8LWIjvWsaJdYxkxsaIM5Az+HHK/cWw5sidE=";
   };
 
-  cargoHash = "sha256-CSwYkm8+JvN+9p3znoTrmLQ7qd5R0DjOGvS4NO68ghs=";
+  cargoHash = "sha256-ceC1YTtDiy/XPzyvcPRhGrOYbNUtunPVd9iDcGl39mE=";
 
   zigDeps = zig_0_15.fetchDeps {
     inherit (finalAttrs) pname version;
     src = "${finalAttrs.src}/vendor/libghostty-vt";
     fetchAll = true;
-    hash = "sha256-GTbHRmgVjq1J4mbiZvsQa78tUKSn9afFDH85d3rQQ3o=";
+    hash = "sha256-pgGu8+NwvFcj6SrN4VaTHLeHdA7QY731ctyrHZwgFAc=";
   };
 
   nativeBuildInputs = [ zig_0_15.hook ];
