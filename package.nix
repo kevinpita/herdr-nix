@@ -58,6 +58,12 @@ rustPlatform.buildRustPackage (finalAttrs: {
   # none of which work in the sandbox.
   cargoTestFlags = [ "--bin=herdr" ];
 
+  # Run the suite single-threaded. Several tests race on shared temp files
+  # under parallel load (e.g. a custom command spawns `printf x > f` and another
+  # thread polls `f` before the write lands, reading it empty), which is why
+  # upstream disables checks entirely. Serializing removes the contention that
+  # widens that window.
+  #
   # Remaining sandbox-only failures, not real defects:
   #   - the foreground-job tests spawn a process inside a PTY and inspect its
   #     foreground process group, which needs a controlling terminal the
@@ -66,6 +72,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
   #     ending in "cat", but on NixOS `cat` lives at a long store path that the
   #     kernel's 15-char comm field truncates, dropping the "cat" suffix.
   checkFlags = [
+    "--test-threads=1"
     "--skip=detect::tests::foreground_job_detects_sleep"
     "--skip=detect::tests::foreground_job_detects_shell_running_command"
     "--skip=pane::tests::spawn_agent_restore_uses_restore_command_as_pane_child"
