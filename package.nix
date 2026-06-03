@@ -48,7 +48,6 @@ rustPlatform.buildRustPackage (finalAttrs: {
       src/persist/restore.rs \
       --replace-fail '/usr/bin/true' '${lib.getExe' coreutils "true"}'
     substituteInPlace \
-      src/pane.rs \
       src/pty/backend.rs \
       --replace-fail '/bin/cat' '${lib.getExe' coreutils "cat"}'
   '';
