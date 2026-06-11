@@ -9,7 +9,7 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "herdr";
-  version = "0.6.8";
+  version = "0.6.9";
 
   __structuredAttrs = true;
 
@@ -17,10 +17,10 @@ rustPlatform.buildRustPackage (finalAttrs: {
     owner = "ogulcancelik";
     repo = "herdr";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-sscOgeInU+2AfVSRDdoSuQbWXkLh4y/Mol0qwquFdCs=";
+    hash = "sha256-jguGh9RLet0jdEcMXCPWDLk8eo8Gsxn1+k8oGDOZP5c=";
   };
 
-  cargoHash = "sha256-fR15LChwnWSu9XKFb706KVri7S7kOjkohXYfVOyViIQ=";
+  cargoHash = "sha256-K+yrVj3akc4Zd3ydoqbF0s+kwLEKbSad129l8mz2vC4=";
 
   zigDeps = zig_0_15.fetchDeps {
     inherit (finalAttrs) pname version;
@@ -45,10 +45,9 @@ rustPlatform.buildRustPackage (finalAttrs: {
       src/app/mod.rs \
       src/app/input/terminal.rs \
       src/app/input/mouse.rs \
-      src/persist/restore.rs \
       --replace-fail '/usr/bin/true' '${lib.getExe' coreutils "true"}'
     substituteInPlace \
-      src/pty/backend.rs \
+      src/pty/backend/unix.rs \
       --replace-fail '/bin/cat' '${lib.getExe' coreutils "cat"}'
   '';
 
@@ -67,14 +66,13 @@ rustPlatform.buildRustPackage (finalAttrs: {
   #   - the foreground-job tests spawn a process inside a PTY and inspect its
   #     foreground process group, which needs a controlling terminal the
   #     sandbox does not provide;
-  #   - the restore test asserts that `ps` reports the pane child's command
-  #     ending in "cat", but on NixOS `cat` lives at a long store path that the
-  #     kernel's 15-char comm field truncates, dropping the "cat" suffix.
+  #   - the manifest auto-update test exercises the remote manifest update path
+  #     and reports no updated manifest under the Nix build sandbox.
   checkFlags = [
     "--test-threads=1"
     "--skip=detect::tests::foreground_job_detects_sleep"
     "--skip=detect::tests::foreground_job_detects_shell_running_command"
-    "--skip=pane::tests::spawn_agent_restore_uses_restore_command_as_pane_child"
+    "--skip=detect::manifest_update::tests::auto_update_reloads_manifest_cache_after_remote_commit"
   ];
 
   dontUseZigBuild = true;
