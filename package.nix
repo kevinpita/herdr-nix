@@ -41,6 +41,10 @@ rustPlatform.buildRustPackage (finalAttrs: {
     chmod -R u+w "$ZIG_GLOBAL_CACHE_DIR/p"
   '';
 
+  postInstall = ''
+    install -Dm444 SKILL.md -t $out/share/herdr/skills/herdr
+  '';
+
   meta = {
     description = "Agent multiplexer that lives in your terminal";
     homepage = "https://github.com/ogulcancelik/herdr";
