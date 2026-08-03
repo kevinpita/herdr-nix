@@ -42,7 +42,12 @@ rustPlatform.buildRustPackage (finalAttrs: {
   '';
 
   postInstall = ''
-    install -Dm444 SKILL.md -t $out/share/herdr/skills/herdr
+    if [ -f skills/herdr/SKILL.md ]; then
+      skill_path=skills/herdr/SKILL.md
+    else
+      skill_path=SKILL.md
+    fi
+    install -Dm444 "$skill_path" -t $out/share/herdr/skills/herdr
   '';
 
   meta = {
