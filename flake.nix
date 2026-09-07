@@ -14,13 +14,17 @@
   };
 
   outputs =
-    { nixpkgs, flake-utils, ... }:
+    {
+      nixpkgs,
+      flake-utils,
+      ...
+    }:
     let
       overlay = final: prev: {
         herdr = final.callPackage ./package.nix { };
       };
     in
-    flake-utils.lib.eachDefaultSystem (
+    flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ] (
       system:
       let
         pkgs = import nixpkgs {
@@ -45,16 +49,22 @@
           };
         };
 
+        formatter = pkgs.nixfmt-tree;
+
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             gh
             jq
-            nixpkgs-fmt
+            nixfmt
+            python3
           ];
         };
       }
     )
     // {
       overlays.default = overlay;
+      homeManagerModules.default = import ./modules/home-manager.nix;
+      homeModules.default = import ./modules/home-manager.nix;
+      nixosModules.default = import ./modules/nixos.nix;
     };
 }

@@ -2,6 +2,8 @@
   lib,
   rustPlatform,
   fetchFromGitHub,
+  installShellFiles,
+  stdenv,
   zig_0_15,
 }:
 
@@ -12,7 +14,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
   __structuredAttrs = true;
 
   src = fetchFromGitHub {
-    owner = "ogulcancelik";
+    owner = "herdrdev";
     repo = "herdr";
     tag = "v${finalAttrs.version}";
     hash = "sha256-SUYF4bbaYwNgoe498VoCUzuLPcjBLQXR0o0DWjjoSnI=";
@@ -27,7 +29,10 @@ rustPlatform.buildRustPackage (finalAttrs: {
     hash = "sha256-PnM+hZIlLyQwK8vJgd/Bhjt1lNIz06T8FahwliRmMrY=";
   };
 
-  nativeBuildInputs = [ zig_0_15.hook ];
+  nativeBuildInputs = [
+    zig_0_15.hook
+    installShellFiles
+  ];
 
   doCheck = false;
 
@@ -48,13 +53,21 @@ rustPlatform.buildRustPackage (finalAttrs: {
       skill_path=SKILL.md
     fi
     install -Dm444 "$skill_path" -t $out/share/herdr/skills/herdr
+    cp -r src/integration/assets $out/share/herdr/integrations
+  ''
+  + lib.optionalString (stdenv.buildPlatform.canExecute stdenv.hostPlatform) ''
+    installShellCompletion --cmd herdr \
+      --bash <($out/bin/herdr completion bash) \
+      --fish <($out/bin/herdr completion fish) \
+      --zsh <($out/bin/herdr completion zsh)
+    $out/bin/herdr --default-config > $out/share/herdr/default-config.toml
   '';
 
   meta = {
     description = "Agent multiplexer that lives in your terminal";
-    homepage = "https://github.com/ogulcancelik/herdr";
-    changelog = "https://github.com/ogulcancelik/herdr/releases/tag/v${finalAttrs.version}";
-    license = lib.licenses.agpl3Only;
+    homepage = "https://github.com/herdrdev/herdr";
+    changelog = "https://github.com/herdrdev/herdr/releases/tag/v${finalAttrs.version}";
+    license = lib.licenses.asl20;
     maintainers = with lib.maintainers; [ kevinpita ];
     mainProgram = "herdr";
     platforms = lib.platforms.unix;

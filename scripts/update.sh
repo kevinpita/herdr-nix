@@ -6,7 +6,7 @@ readonly GREEN='\033[0;32m'
 readonly YELLOW='\033[1;33m'
 readonly NC='\033[0m'
 
-readonly GITHUB_REPO="ogulcancelik/herdr"
+readonly GITHUB_REPO="herdrdev/herdr"
 readonly PACKAGE_FILE="package.nix"
 readonly FAKE_HASH="lib.fakeHash"
 
@@ -171,6 +171,12 @@ verify_update() {
 
     log_info "Checking herdr version"
     ./result/bin/herdr --version
+
+    log_info "Checking upstream configuration metadata"
+    ./scripts/update-config-reference.sh --check
+
+    log_info "Evaluating flake outputs"
+    nix flake check "$(flake_path)" --all-systems --no-build
 }
 
 update_flake_lock() {
@@ -193,8 +199,8 @@ update_to_version() {
     log_info "Updating herdr from $current_version to $new_version"
     update_version "$new_version"
     refresh_hashes
-    verify_update
     update_flake_lock
+    verify_update
     rm -f "$PACKAGE_FILE.bak"
     show_changes
 }
