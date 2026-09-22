@@ -245,6 +245,7 @@ Generated from `data/config-reference.json` with `scripts/render-settings.py`.
 | `ui.sound.agents.kilo` | `default`, `on`, `off` | `"default"` |
 | `ui.sound.agents.qodercli` | `default`, `on`, `off` | `"default"` |
 | `ui.sound.agents.qwen` | `default`, `on`, `off` | `"default"` |
+| `ui.sound.agents.letta` | `default`, `on`, `off` | `"default"` |
 | `ui.sound.agents.maki` | `default`, `on`, `off` | `"default"` |
 | `ui.sound.agents.muse` | `default`, `on`, `off` | `"default"` |
 

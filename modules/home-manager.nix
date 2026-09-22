@@ -132,6 +132,7 @@ in
           "mastracode"
           "antigravity-cli"
           "grok"
+          "letta"
         ]
       );
       default = [ ];

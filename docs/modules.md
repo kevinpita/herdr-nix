@@ -176,7 +176,7 @@ programs.herdr = {
 };
 ```
 
-Supported integration targets are `pi`, `omp`, `claude`, `codex`, `copilot`, `devin`, `droid`, `kimi`, `opencode`, `kilo`, `hermes`, `qodercli`, `qwen`, `cursor`, `mastracode`, `antigravity-cli`, and `grok`.
+Supported integration targets are `pi`, `omp`, `claude`, `codex`, `copilot`, `devin`, `droid`, `kimi`, `opencode`, `kilo`, `hermes`, `qodercli`, `qwen`, `cursor`, `mastracode`, `antigravity-cli`, `grok`, and `letta`.
 
 Integrations use the **upstream installers**, not declarative ownership of other agents' settings. This is an explicit opt-in to modify those agents' writable config files. Install and initialize each agent first. Installation runs after Home Manager links its files. It respects activation dry-run mode. It can fail if the target configuration is already a read-only Nix file. In that case, leave `integrations` empty and configure the agent's own module with the packaged assets under `share/herdr/integrations`.
 

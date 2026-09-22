@@ -112,11 +112,11 @@ set_cargo_fake_hash() {
 
 set_zig_hash() {
     local hash="$1"
-    perl -0pi -e "s|(zigDeps = zig_0_15\\.fetchDeps \\{.*?hash = )[^;]+;|\${1}\"$hash\";|s" "$PACKAGE_FILE"
+    perl -0pi -e "s|(zigDeps = zig_0_[0-9]+\\.fetchDeps \\{.*?hash = )[^;]+;|\${1}\"$hash\";|s" "$PACKAGE_FILE"
 }
 
 set_zig_fake_hash() {
-    perl -0pi -e "s|(zigDeps = zig_0_15\\.fetchDeps \\{.*?hash = )[^;]+;|\${1}$FAKE_HASH;|s" "$PACKAGE_FILE"
+    perl -0pi -e "s|(zigDeps = zig_0_[0-9]+\\.fetchDeps \\{.*?hash = )[^;]+;|\${1}$FAKE_HASH;|s" "$PACKAGE_FILE"
 }
 
 extract_got_hash() {
