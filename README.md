@@ -4,7 +4,7 @@ Nix package, Home Manager module, and NixOS module for [Herdr](https://github.co
 
 Flake systems: `x86_64-linux`, `aarch64-linux`, and `aarch64-darwin`. The pinned nixpkgs no longer supports `x86_64-darwin`.
 
-Configure all 207 settings in the upstream reference, custom keybindings, plugins, saved SSH machines, and agent integrations with Nix. Builds check the generated configuration with `herdr config check`.
+Configure all 210 settings in the upstream reference, custom keybindings, plugins, saved SSH machines, and agent integrations with Nix. Builds check the generated configuration with `herdr config check`.
 
 ## Home Manager
 

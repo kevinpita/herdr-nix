@@ -107,7 +107,7 @@ Generated from `data/config-reference.json` with `scripts/render-settings.py`.
 
 | Setting | Type / values | Upstream default |
 | --- | --- | --- |
-| `keys.prefix` | string | `"ctrl+b"` |
+| `keys.prefix` | keybinding | `"ctrl+b"` |
 | `keys.help` | keybinding | `"prefix+?"` |
 | `keys.settings` | keybinding | `"prefix+s"` |
 | `keys.new_workspace` | keybinding | `"prefix+shift+n"` |
@@ -144,6 +144,7 @@ Generated from `data/config-reference.json` with `scripts/render-settings.py`.
 | `keys.close_tab` | keybinding | `"prefix+shift+x"` |
 | `keys.rename_pane` | keybinding | `"prefix+shift+p"` |
 | `keys.edit_scrollback` | keybinding | `"prefix+e"` |
+| `keys.clear_pane` | keybinding | `unset` |
 | `keys.copy_mode` | keybinding | `"prefix+["` |
 | `keys.focus_pane_left` | keybinding | `"prefix+h"` |
 | `keys.focus_pane_down` | keybinding | `"prefix+j"` |
@@ -254,6 +255,7 @@ Generated from `data/config-reference.json` with `scripts/render-settings.py`.
 | Setting | Type / values | Upstream default |
 | --- | --- | --- |
 | `session.resume_agents_on_restore` | boolean | `true` |
+| `session.startup_per_agent_delay_ms` | integer | `100` |
 
 ## Worktrees
 

@@ -1,6 +1,6 @@
 # Upstream configuration metadata
 
-`config-reference.json` is copied without changes from Herdr **v0.9.0**:
+`config-reference.json` is copied without changes from Herdr **v0.9.2**:
 
 `docs/next/website/src/data/config-reference.json`
 

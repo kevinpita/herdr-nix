@@ -9,7 +9,7 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "herdr";
-  version = "0.9.1";
+  version = "0.9.2";
 
   __structuredAttrs = true;
 
@@ -17,10 +17,10 @@ rustPlatform.buildRustPackage (finalAttrs: {
     owner = "herdrdev";
     repo = "herdr";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-N6+kprfWRyh0AkAiopkGsNXUGGORyPVFHEaDHCpGQs8=";
+    hash = "sha256-sqi7i9J4zGYQ4eL8jf82w0SSdAgLt6zjadWGtiO56GU=";
   };
 
-  cargoHash = "sha256-1VAmsDE3zeU0wMVQKleQcd/zq8/k/oor8tasrsRQfeY=";
+  cargoHash = "sha256-+g+iZV5xraP9tyZeauysbdt2g/3e6TRbvkFNpikFCHs=";
 
   zigDeps = zig_0_16.fetchDeps {
     inherit (finalAttrs) pname version;
