@@ -3,6 +3,7 @@
   rustPlatform,
   fetchFromGitHub,
   installShellFiles,
+  lld,
   stdenv,
   zig_0_16,
 }:
@@ -32,7 +33,13 @@ rustPlatform.buildRustPackage (finalAttrs: {
   nativeBuildInputs = [
     zig_0_16.hook
     installShellFiles
-  ];
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isLinux [ lld ];
+
+  # GNU ld rejects overlapping unwind records in the bundled Zig library.
+  env = lib.optionalAttrs stdenv.hostPlatform.isLinux {
+    NIX_CFLAGS_LINK = "-fuse-ld=lld";
+  };
 
   doCheck = false;
 
