@@ -33,11 +33,22 @@ jobs:
       - name: Evaluate all supported systems
         run: nix flake check --all-systems --no-build
 
-      - name: Build herdr
-        run: nix build .#herdr --print-build-logs
+      - name: Build herdr-core
+        run: nix build .#herdr-core --print-build-logs -o result-core
 
-      - name: Check herdr version
-        run: ./result/bin/herdr --version
+      - name: Check herdr-core version
+        run: ./result-core/bin/hc --version
 
-      - name: Verify package contents
-        run: test -f ./result/bin/herdr
+      - name: Build herdr-tui
+        run: nix build .#herdr-tui --print-build-logs -o result-tui
+
+      - name: Check herdr-tui version
+        run: ./result-tui/bin/herdr --version
+
+      - name: Build herdr app
+        run: nix build .#herdr --print-build-logs -o result-app
+
+      - name: Verify herdr app contents
+        run: |
+          test -x ./result-app/bin/herdr-app
+          test -f ./result-app/share/applications/herdr-app.desktop

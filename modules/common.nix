@@ -10,12 +10,12 @@ let
 in
 {
   options.programs.herdr = {
-    enable = lib.mkEnableOption "Herdr terminal workspaces";
+    enable = lib.mkEnableOption "the herdr TUI (herdr-tui) and its configuration";
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.callPackage ../package.nix { };
-      defaultText = lib.literalExpression "pkgs.callPackage herdr-nix/package.nix { }";
-      description = "Herdr package to install and use for validation.";
+      default = pkgs.callPackage ../packages/herdr-tui.nix { };
+      defaultText = lib.literalExpression "pkgs.callPackage herdr-nix/packages/herdr-tui.nix { }";
+      description = "herdr TUI package to install and use for validation.";
     };
     settings = lib.mkOption {
       type = import ./settings.nix { inherit lib pkgs; };

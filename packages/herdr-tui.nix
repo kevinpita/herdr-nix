@@ -9,7 +9,7 @@
 }:
 
 rustPlatform.buildRustPackage (finalAttrs: {
-  pname = "herdr";
+  pname = "herdr-tui";
   version = "0.9.3";
 
   __structuredAttrs = true;
@@ -71,7 +71,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
   '';
 
   meta = {
-    description = "Agent multiplexer that lives in your terminal";
+    description = "Agent multiplexer that lives in your terminal (the herdr TUI)";
     homepage = "https://github.com/herdrdev/herdr";
     changelog = "https://github.com/herdrdev/herdr/releases/tag/v${finalAttrs.version}";
     license = lib.licenses.asl20;

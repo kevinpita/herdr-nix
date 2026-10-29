@@ -1,10 +1,22 @@
 # herdr-nix
 
-Nix package, Home Manager module, and NixOS module for [Herdr](https://github.com/herdrdev/herdr) **0.9.0**.
+Nix packages for Herdr, plus a Home Manager module and a NixOS module for the herdr TUI.
+
+| Package | Upstream | Programs | Use it on |
+| --- | --- | --- | --- |
+| `herdr` (default) | [herdr-app](https://github.com/herdrdev/herdr-app) | `herdr-app` | Desktops. It needs a graphical session and Vulkan. |
+| `herdr-core` | [herdr-core](https://github.com/herdrdev/herdr-core) | `herdr-core`, `hc` | Every machine that runs terminals: desktops and servers. |
+| `herdr-tui` | [herdr](https://github.com/herdrdev/herdr) | `herdr` | Machines where you want the 0.9 terminal UI. |
+
+The app and `hc` share terminals. The herdr TUI has its own server, and the app and `hc` cannot see its terminals.
+
+The app is built from source without `HERDR_APP_RELEASE`, so it does not update itself and has no telemetry endpoint. Its wrapper also sets `HERDR_TELEMETRY=0`. On Linux, `herdr-core` is a static musl binary, because `hc machine add` copies the local binary to other machines. `herdr-core` reports Nix as its package manager, so `hc update` and the app do not replace it.
 
 Flake systems: `x86_64-linux`, `aarch64-linux`, and `aarch64-darwin`. The pinned nixpkgs no longer supports `x86_64-darwin`.
 
-Configure all 210 settings in the upstream reference, custom keybindings, plugins, saved SSH machines, and agent integrations with Nix. Builds check the generated configuration with `herdr config check`.
+On NixOS, the app loads the system's Vulkan driver from `/run/opengl-driver`. Build it against the system nixpkgs (`inputs.nixpkgs.follows = "nixpkgs"`, or `overlays.default`). A plain `nix run` of this flake can fail with "No GPU adapters found" when its locked nixpkgs has an older glibc than the driver.
+
+The modules below configure the **herdr TUI** (`programs.herdr`, package `herdr-tui`). Configure all 210 settings in the upstream reference, custom keybindings, plugins, saved SSH machines, and agent integrations with Nix. Builds check the generated configuration with `herdr config check`.
 
 ## Home Manager
 
@@ -126,18 +138,21 @@ Settings use upstream names, such as `settings.ui.pane_borders`, not a second se
 
 **Do not put secrets in Nix settings or file contents.** Nix store files are readable by all users. Keep tokens, SSH keys, and plugin credentials in separate runtime files.
 
-## Package only
-
-The existing package, app, and overlay outputs remain available:
+## Packages only
 
 ```sh
-nix run github:kevinpita/herdr-nix
-nix profile install github:kevinpita/herdr-nix
+nix run github:kevinpita/herdr-nix              # the herdr app
+nix run github:kevinpita/herdr-nix#herdr-core   # hc
+nix run github:kevinpita/herdr-nix#herdr-tui    # the herdr TUI
 ```
 
-Use `herdr-nix.packages.${system}.default` in a shell or package list. Use `herdr-nix.overlays.default` to add `pkgs.herdr`.
+Use `herdr-nix.packages.${system}.<name>` in a package list. `herdr-nix.overlays.default` adds `pkgs.herdr`, `pkgs.herdr-core`, and `pkgs.herdr-tui`.
 
-The package includes Bash, Fish, and Zsh completions, the default config, the bundled agent skill, and integration assets under `share/herdr`.
+A server that the app reaches over SSH needs only `herdr-core`. On Linux, also turn on systemd linger for the user (`users.users.<name>.linger = true` on NixOS). Without linger, systemd stops the core and its terminals when your last login ends.
+
+- `herdr`: the app, a `.desktop` entry, and its icon.
+- `herdr-core`: `herdr-core`, the `hc` link, and the agent skill under `share/herdr-core/skills`.
+- `herdr-tui`: Bash, Fish, and Zsh completions, the default config, the bundled agent skill, and integration assets under `share/herdr`.
 
 ## Binary cache
 
@@ -157,8 +172,8 @@ Run these commands from the repository root:
 nix develop
 nix fmt
 nix flake check --all-systems --no-build
-nix build .#herdr
-./result/bin/herdr --version
+nix build .#herdr-core
+./result/bin/hc --version
 ```
 
 For new, untracked files, use `nix flake check "path:$PWD" --all-systems --no-build` until the files are added to Git.
@@ -167,11 +182,12 @@ Configuration builds use Herdr's own validation commands. Plugin registration us
 
 ## Updates
 
-The update workflow checks releases hourly. It checks configuration metadata and evaluates the flake before it creates a pull request.
+The update workflow checks each package hourly. The TUI version comes from GitHub releases. The app and core versions come from `releases.herdr.dev`. It evaluates the flake before it creates a pull request, and checks the TUI configuration metadata.
 
 ```sh
-./scripts/update.sh --check
-./scripts/update.sh --version 0.9.0
+./scripts/update.sh --package core --check
+./scripts/update.sh --package app --version 0.1.8
+./scripts/update.sh --package tui
 ```
 
 When upstream configuration changes, review the new contract, then run:

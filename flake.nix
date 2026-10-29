@@ -1,5 +1,5 @@
 {
-  description = "Nix flake for herdr, an agent multiplexer that lives in your terminal";
+  description = "Nix flake for herdr: the desktop app, herdr-core (hc), and the herdr TUI";
 
   nixConfig = {
     extra-substituters = [ "https://kevinpita.cachix.org" ];
@@ -20,8 +20,14 @@
       ...
     }:
     let
-      overlay = final: prev: {
-        herdr = final.callPackage ./package.nix { };
+      overlay = final: _prev: {
+        herdr = final.callPackage ./packages/herdr-app.nix { };
+        # Static on Linux: `hc machine add` copies this binary to other machines.
+        herdr-core =
+          (if final.stdenv.hostPlatform.isLinux then final.pkgsStatic else final).callPackage
+            ./packages/herdr-core.nix
+            { };
+        herdr-tui = final.callPackage ./packages/herdr-tui.nix { };
       };
     in
     flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ] (
@@ -35,18 +41,7 @@
       {
         packages = {
           default = pkgs.herdr;
-          herdr = pkgs.herdr;
-        };
-
-        apps = {
-          default = {
-            type = "app";
-            program = "${pkgs.herdr}/bin/herdr";
-          };
-          herdr = {
-            type = "app";
-            program = "${pkgs.herdr}/bin/herdr";
-          };
+          inherit (pkgs) herdr herdr-core herdr-tui;
         };
 
         formatter = pkgs.nixfmt-tree;

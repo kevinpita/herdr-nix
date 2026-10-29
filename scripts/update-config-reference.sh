@@ -5,7 +5,7 @@ if [[ $# -gt 1 || ( $# -eq 1 && $1 != --check ) ]]; then
     echo 'Usage: update-config-reference.sh [--check]' >&2
     exit 2
 fi
-source=$(nix build "path:$PWD#herdr.src" --no-link --print-out-paths)
+source=$(nix build "path:$PWD#herdr-tui.src" --no-link --print-out-paths)
 reference="$source/docs/next/website/src/data/config-reference.json"
 if [[ ${1:-} == --check ]]; then
     cmp "$reference" data/config-reference.json
