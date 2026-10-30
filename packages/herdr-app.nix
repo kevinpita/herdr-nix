@@ -17,7 +17,7 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "herdr-app";
-  version = "0.1.8";
+  version = "0.1.9";
 
   __structuredAttrs = true;
 
@@ -26,10 +26,10 @@ rustPlatform.buildRustPackage (finalAttrs: {
     repo = "herdr-app";
     tag = "v${finalAttrs.version}";
     fetchSubmodules = true;
-    hash = "sha256-NPhh39yknVBYdvUbSGxaMFTra7anNryfnE0sxlH9fgU=";
+    hash = "sha256-XXAcJWwaaec/E941NkGAiCWgeHyT5jpYKcfz+8mbkvI=";
   };
 
-  cargoHash = "sha256-acGcomB6O84E3C9oklTpToe+b3POI6iyxIOvTFD8zkQ=";
+  cargoHash = "sha256-NOLcdtc9zLojjkEwGbjiTGTxDhX9w42hWtNrrE3kID4=";
 
   # Build-platform Zig: passthru attrs are not spliced.
   zigDeps = buildPackages.zig_0_16.fetchDeps {
