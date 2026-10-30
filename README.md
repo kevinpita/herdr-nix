@@ -16,7 +16,7 @@ Flake systems: `x86_64-linux`, `aarch64-linux`, and `aarch64-darwin`. The pinned
 
 On NixOS, the app loads the system's Vulkan driver from `/run/opengl-driver`. Build it against the system nixpkgs (`inputs.nixpkgs.follows = "nixpkgs"`, or `overlays.default`). A plain `nix run` of this flake can fail with "No GPU adapters found" when its locked nixpkgs has an older glibc than the driver.
 
-The modules below configure the **herdr TUI** (`programs.herdr`, package `herdr-tui`). Configure all 210 settings in the upstream reference, custom keybindings, plugins, saved SSH machines, and agent integrations with Nix. Builds check the generated configuration with `herdr config check`.
+The modules below configure the **herdr TUI** (`programs.herdr`, package `herdr-tui`). Configure all 211 settings in the upstream reference, custom keybindings, plugins, saved SSH machines, and agent integrations with Nix. Builds check the generated configuration with `herdr config check`.
 
 ## Home Manager
 

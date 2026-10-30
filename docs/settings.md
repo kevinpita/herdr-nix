@@ -17,6 +17,7 @@ Generated from `data/config-reference.json` with `scripts/render-settings.py`.
 
 | Setting | Type / values | Upstream default |
 | --- | --- | --- |
+| `server.allow_unelevated_clients` | boolean | `false` |
 | `server.headless_cols` | integer | `120` |
 | `server.headless_rows` | integer | `40` |
 
