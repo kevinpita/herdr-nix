@@ -7,7 +7,7 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "herdr-core";
-  version = "0.1.17";
+  version = "0.1.18";
 
   __structuredAttrs = true;
 
@@ -16,10 +16,10 @@ rustPlatform.buildRustPackage (finalAttrs: {
     repo = "herdr-core";
     tag = "v${finalAttrs.version}";
     fetchSubmodules = true;
-    hash = "sha256-fulACGl26Pk6FAvOOJsFtPfFQMwJAfw/MqMa6Rq0/4c=";
+    hash = "sha256-MSq0Tzlv0/aOQvuXkeuVuGx3vpUauxI1YAeLpKy7WG4=";
   };
 
-  cargoHash = "sha256-UZsc5AElm5gmIImgR8cZz0U9+2RNG+DRb+OU8ifZSXc=";
+  cargoHash = "sha256-d3dTX5qvikpkIABz0ecDjPu1pA0LsSmPu5j4Oum6R3c=";
 
   # Build-platform Zig: passthru attrs are not spliced, and a static-host Zig
   # means compiling LLVM. build.rs passes -Dtarget, so this Zig still targets musl.
