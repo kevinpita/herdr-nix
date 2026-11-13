@@ -13,6 +13,7 @@
   libxcb,
   wayland,
   vulkan-loader,
+  zstd,
 }:
 
 rustPlatform.buildRustPackage (finalAttrs: {
@@ -49,7 +50,11 @@ rustPlatform.buildRustPackage (finalAttrs: {
     makeWrapper
   ];
 
-  buildInputs = lib.optionals stdenv.hostPlatform.isLinux [
+  # buildRustPackage makes zstd-sys link the system zstd.
+  buildInputs = [
+    zstd
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isLinux [
     fontconfig
     freetype
     libxkbcommon
