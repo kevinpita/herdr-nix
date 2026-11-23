@@ -25,7 +25,14 @@ rustPlatform.buildRustPackage (finalAttrs: {
   # means compiling LLVM. build.rs passes -Dtarget, so this Zig still targets musl.
   zigDeps = buildPackages.zig_0_16.fetchDeps {
     inherit (finalAttrs) pname version;
-    src = "${finalAttrs.src}/vendor/ghostty";
+    src = buildPackages.runCommand "herdr-core-ghostty-zig-src" { } ''
+      cp -R ${finalAttrs.src}/vendor/ghostty "$out"
+      chmod -R u+w "$out"
+      substituteInPlace "$out/pkg/translate-c/build.zig.zon" \
+        --replace-fail \
+          "https://codeberg.org/vancluever/translate-c/archive/4e879eb8aba615de112eabd1231ea6e01920cead.tar.gz" \
+          "https://github.com/moderatelyConfused/translate-c/archive/4e879eb8aba615de112eabd1231ea6e01920cead.tar.gz"
+    '';
     fetchAll = true;
     hash = "sha256-G9xbZ/pyQTDIfzG0h++i70a45zpwyYpZMBZfAnoOQw0=";
   };

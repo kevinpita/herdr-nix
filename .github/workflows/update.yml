@@ -13,6 +13,7 @@ on:
         required: false
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -107,6 +108,13 @@ jobs:
           labels: |
             dependencies
             automated
+
+      - name: Build updated package
+        if: steps.check.outputs.update_needed == 'true' && steps.create-pr.outputs.pull-request-number
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UPDATE_BRANCH: ${{ steps.create-pr.outputs.pull-request-branch }}
+        run: gh workflow run build.yml --ref "$UPDATE_BRANCH"
 
       - name: Enable Auto-Merge
         if: steps.check.outputs.update_needed == 'true' && steps.create-pr.outputs.pull-request-number
